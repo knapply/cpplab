@@ -12,12 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Get latest CMake
-        uses: lukka/get-cmake@latest
-
       - name: Build and Test
         run: |
           cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
           cmake -Htest -Bbuild/test 
-          cmake --build build/test
-          cmake --build build/test --target test
+          cmake --build build --config Debug -j4
+          ctest --build-config Debug
