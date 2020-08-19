@@ -1,0 +1,42 @@
+name: MinGW
+
+on: push
+
+jobs:
+  windows-mingw:
+    name: ${{ matrix.mingw }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mingw: ["MINGW32", "MINGW64"]
+    env:
+      CMAKE_GENERATOR: MSYS Makefiles
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: msys2/setup-msys2@v1
+        with:
+          update: true # cache: true
+          msystem: ${{ matrix.mingw }}
+
+      - name: build and install
+        run: |
+          cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+          sudo cmake --build build --target install
+          rm -rf build
+
+      - name: configure
+        run: CXX=${{ matrix.config.run }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
+
+      - name: build
+        run: cmake --build build --config Debug -j4
+
+      - name: test
+        run: |
+          cd build
+          ctest --build-config Debug
+
+      - name: collect code coverage
+        run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"
