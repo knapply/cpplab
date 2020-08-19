@@ -8,17 +8,9 @@ env:
 jobs:
   macos:
     runs-on: macos-latest
-    env:
-      CC: clang
-      CXX: clang++
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set Xcode 11.6
-        run: |
-          sudo xcode-select -s /Applications/Xcode_11.6.app/Contents/Developer
-          clang -v
 
       - name: Build and Test
         run: |

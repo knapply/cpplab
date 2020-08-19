@@ -7,7 +7,6 @@ env:
 
 jobs:
   windows-mingw:
-    name: ${{ matrix.mingw }}
     runs-on: windows-latest
     env:
       CMAKE_GENERATOR: Ninja
