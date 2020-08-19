@@ -26,6 +26,7 @@ jobs:
 
       - name: Setup Scoop
         shell: powershell
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
           scoop install sudo --global
