@@ -21,6 +21,9 @@ jobs:
           update: true # cache: true
           msystem: ${{ matrix.mingw }}
 
+      - name: configure
+        run: cmake -Htest -Bbuild
+
       - name: build
         run: cmake --build build --config Debug -j4
 
