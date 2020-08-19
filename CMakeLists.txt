@@ -8,6 +8,9 @@ project(cpplab
   LANGUAGES CXX
 )
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
@@ -59,7 +62,7 @@ FILE(GLOB_RECURSE headers2 CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includ
 add_library(cpplabHeaders EXCLUDE_FROM_ALL ${headers} ${headers2})
 set_target_properties(cpplabHeaders PROPERTIES LINKER_LANGUAGE CXX)
 
-
+# set_property(COMPILE_FEATURES cxx_std_17)
 
 add_library(cpplab INTERFACE)
 set_target_properties(cpplab PROPERTIES INTERFACE_COMPILE_FEATURES cxx_std_17)

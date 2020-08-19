@@ -54,7 +54,7 @@ static_assert(std::all_of(std::begin(alpha_numeric),
 static_assert(std::all_of(std::begin(whitespace),
                           std::end(whitespace),
                           is_char<char>));
-static_assert(std::all_of(std::begin(punct), std::end(punct), is_char<char>));
+static_assert(std::all_of(std::cbegin(punct), std::cend(punct), is_char<char>));
 
 
 template <typename T>
