@@ -3,7 +3,7 @@ on: push
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
 
-name: GCC>=7
+name: "GCC>=7 "
 
 jobs:
   Build:
