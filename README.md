@@ -1,5 +1,5 @@
 # cpplab
 
-![GCC>6](https://github.com/knapply/cpplab/workflows/GCC%3E6/badge.svg)
-![Clang>5](https://github.com/knapply/cpplab/workflows/Clang%3E5/badge.svg)
+![GCC](https://github.com/knapply/cpplab/workflows/GCC/badge.svg)
+![Clang](https://github.com/knapply/cpplab/workflows/Clang/badge.svg)
 ![MinGW](https://github.com/knapply/cpplab/workflows/MinGW/badge.svg)
