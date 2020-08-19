@@ -1,0 +1,52 @@
+on: push
+
+env:
+  CTEST_OUTPUT_ON_FAILURE: 1
+
+name: GCC
+
+jobs:
+  Build:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }}, ${{ matrix.config.compiler }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: ubuntu-18.04, compiler_name: g++, compiler: g++-7, run: g++-7 }
+          - { os: ubuntu-18.04, compiler_name: g++, compiler: g++-8, run: g++-8 }
+          - { os: ubuntu-18.04, compiler_name: g++, compiler: g++-9, run: g++-9 }
+          - { os: ubuntu-18.04, compiler_name: g++, compiler: g++-10, run: g++-10 }
+          - { os: ubuntu-20.04, compiler_name: g++, compiler: g++-7, run: g++-7 }
+          - { os: ubuntu-20.04, compiler_name: g++, compiler: g++-8, run: g++-8 }
+          - { os: ubuntu-20.04, compiler_name: g++, compiler: g++-9, run: g++-9 }
+          - { os: ubuntu-20.04, compiler_name: g++, compiler: g++-10, run: g++-10 }
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: GCC
+        if: runner.os == 'Linux' && matrix.config.compiler_name == 'g++'
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install ${{ matrix.config.compiler }} -y
+
+      - name: Build and Install
+        run: |
+          cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+          sudo cmake --build build --target install
+          rm -rf build
+
+      - name: Configure
+        run: CXX=${{ matrix.config.run }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
+
+      - name: Build
+        run: cmake --build build --config Debug -j4
+
+      - name: Test
+        run: |
+          cd build
+          ctest --build-config Debug
+
+      - name: Collect Code Coverage
+        run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"

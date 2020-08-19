@@ -1,0 +1,12 @@
+*.o
+*.so
+*.dll
+_deps
+build
+CMakeFiles
+CTestTestfile.cmake
+knapplyTests*
+Makefile
+Testing/Temporary
+CMakeCache.txt
+.clangd
