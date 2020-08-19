@@ -35,12 +35,16 @@ jobs:
           sudo scoop install gcc --arch 64bit --global
           $env:path
 
-      - name: Build and Test
+      - name: Build
         shell: powershell
         run: |
           $ENV:PATH="C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\gcc\current\bin;C:\ProgramData\scoop\apps\ninja\current;$ENV:PATH"
           cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
           cmake -Htest -Bbuild/test 
           cmake --build build --config Debug -j4
+
+      - name: Test
+        shell: powershell
+        run: |
           cd build
           ctest --build-config Debug
