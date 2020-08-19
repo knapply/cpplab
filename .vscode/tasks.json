@@ -1,0 +1,10 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "cmake -Htest -Bbuild/test && cmake --build build/test && CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test"
+        }
+    ]
+}

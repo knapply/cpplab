@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.rmd": "markdown",
+        "type_traits": "cpp",
+        "string_view": "cpp"
+    }
+}
