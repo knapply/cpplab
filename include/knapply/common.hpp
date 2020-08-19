@@ -1,7 +1,7 @@
 #ifndef __KNAPPLY__COMMON_HPP__
 #define __KNAPPLY__COMMON_HPP__
 
-
+#include "stl-compat.hpp"
 #include <limits>
 
 

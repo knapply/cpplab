@@ -1,4 +1,8 @@
 #include "doctest/doctest.h"
+#include "knapply/portability.hpp"
+
+
+#include <knapply.hpp>
 
 
 void example() {

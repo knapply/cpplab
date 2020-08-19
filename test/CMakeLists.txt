@@ -4,6 +4,9 @@ project(cpplabTests
   LANGUAGES CXX
 )
 
+option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
 # ---- Options ----
 
 option(ENABLE_TEST_COVERAGE "Enable test coverage" ON)
