@@ -48,13 +48,6 @@ constexpr bool is_char(const char c) {
          std::is_same_v<std::remove_cvref_t<T>, char16_t> ||
          std::is_same_v<std::remove_cvref_t<T>, char32_t>;
 }
-static_assert(std::all_of(std::cbegin(alpha_numeric),
-                          std::cend(alpha_numeric),
-                          is_char<char>));
-static_assert(std::all_of(std::cbegin(whitespace),
-                          std::cend(whitespace),
-                          is_char<char>));
-static_assert(std::all_of(std::cbegin(punct), std::cend(punct), is_char<char>));
 
 
 constexpr bool is_ascii(const char c) {
