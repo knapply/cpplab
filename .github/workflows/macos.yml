@@ -20,13 +20,8 @@ jobs:
           cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
           sudo cmake --build build --target install
 
-      - name: Configure
-        run: cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
-
-      - name: Build
-        run: cmake --build build --config Debug -j4
-
-      - name: Test
+      - name: Build and Test
         run: |
-          cd build
+          cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
+          cmake --build build --config Debug -j4
           ctest --build-config Debug

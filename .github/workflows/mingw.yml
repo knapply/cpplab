@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: ["32bit", "64bit"]
+        mingw: ["32bit", "64bit"]
     env:
       CMAKE_GENERATOR: Ninja
       CC: gcc
@@ -26,7 +26,7 @@ jobs:
           sudo scoop install git --global
           sudo scoop install ninja --global
           sudo scoop install cmake --global
-          sudo scoop install gcc --arch #{{ matrix.arch }} --global
+          sudo scoop install gcc --arch #{{ matrix.mingw }} --global
           $env:path
 
       - name: Build and Test
