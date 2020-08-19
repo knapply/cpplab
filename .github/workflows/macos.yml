@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
     env:
       CC: clang
-      CXX: clang++
+      CXX: clang++-17
 
     steps:
       - uses: actions/checkout@v2
