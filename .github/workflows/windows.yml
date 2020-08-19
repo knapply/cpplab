@@ -1,21 +1,21 @@
-name: Windows
+# name: Windows
 
-on: [push]
+# on: [push]
 
-env:
-  CTEST_OUTPUT_ON_FAILURE: 1
+# env:
+#   CTEST_OUTPUT_ON_FAILURE: 1
 
-jobs:
-  build:
-    runs-on: windows-latest
+# jobs:
+#   build:
+#     runs-on: windows-latest
 
-    steps:
-      - uses: actions/checkout@v1
+#     steps:
+#       - uses: actions/checkout@v1
 
-      - name: build
-        run: cmake --build build --config Debug -j4
+#       - name: build
+#         run: cmake --build build --config Debug -j4
 
-      - name: test
-        run: |
-          cd build
-          ctest --build-config Debug
+#       - name: test
+#         run: |
+#           cd build
+#           ctest --build-config Debug
