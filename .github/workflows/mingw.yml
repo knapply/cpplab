@@ -29,7 +29,7 @@ jobs:
           sudo scoop install gcc --arch #{{ matrix.arch }} --global
           $env:path
 
-      - name: Build and Test 64-bit x64
+      - name: Build and Test
         shell: powershell
         run: |
           $ENV:PATH="C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\gcc\current\bin;C:\ProgramData\scoop\apps\ninja\current;$ENV:PATH"
