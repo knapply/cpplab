@@ -33,5 +33,4 @@ jobs:
         run: |
           $ENV:PATH="C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\gcc\current\bin;C:\ProgramData\scoop\apps\ninja\current;$ENV:PATH"
           cmake -Htest -Bbuild/test 
-          cmake --build build/test
           cmake --build build/test --target test
