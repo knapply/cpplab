@@ -42,4 +42,5 @@ jobs:
           cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
           cmake -Htest -Bbuild/test 
           cmake --build build --config Debug -j4
+          cd build
           ctest --build-config Debug
