@@ -6,16 +6,25 @@ env:
   CTEST_OUTPUT_ON_FAILURE: 1
 
 jobs:
-  macos:
+  apple-clang:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
 
-      - name: Build and Test
+      - name: Build and Install
         run: |
-          cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
-          cmake -Htest -Bbuild/test 
-          cmake --build build --config Debug -j4
+          cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+          sudo cmake --build build --target install
+          rm -rf build
+
+      - name: Configure
+        run: cmake -Htest -Bbuild
+
+      - name: Build
+        run: cmake --build build --config Debug -j4
+
+      - name: Test
+        run: |
           cd build
           ctest --build-config Debug
