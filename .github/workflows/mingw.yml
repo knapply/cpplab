@@ -4,7 +4,7 @@ on: push
 
 jobs:
   windows-mingw:
-    name: ${{ matrix.mingw }}
+    name: ${{ matrix.arch }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
