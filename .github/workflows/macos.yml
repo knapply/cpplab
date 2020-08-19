@@ -20,13 +20,10 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_11.6.app/Contents/Developer
           clang -v
 
-      - name: Build
+      - name: Build and Test
         run: |
           cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
           cmake -Htest -Bbuild/test 
           cmake --build build --config Debug -j4
-
-      - name: Test
-        run: |
           cd build
           ctest --build-config Debug

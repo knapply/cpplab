@@ -17,16 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: |
-            C:\ProgramData\scoop
-          key: scoop
+      # - uses: actions/cache@v2
+      #   id: cache
+      #   with:
+      #     path: |
+      #       C:\ProgramData\scoop
+      #     key: scoop
 
       - name: Setup Scoop
         shell: powershell
-        if: steps.cache.outputs.cache-hit != 'true'
+        # if: steps.cache.outputs.cache-hit != 'true'
         run: |
           Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
           scoop install sudo --global
@@ -36,16 +36,12 @@ jobs:
           sudo scoop install gcc --arch 64bit --global
           $env:path
 
-      - name: Build
+      - name: Build and Test
         shell: powershell
         run: |
           $ENV:PATH="C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\gcc\current\bin;C:\ProgramData\scoop\apps\ninja\current;$ENV:PATH"
           cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
           cmake -Htest -Bbuild/test 
           cmake --build build --config Debug -j4
-
-      - name: Test
-        shell: powershell
-        run: |
           cd build
           ctest --build-config Debug
