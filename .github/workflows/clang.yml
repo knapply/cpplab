@@ -1,0 +1,56 @@
+on: push
+
+env:
+  CTEST_OUTPUT_ON_FAILURE: 1
+
+name: Clang
+
+jobs:
+  Build:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }}, R-${{ matrix.r }} ${{ matrix.config.compiler }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-6.0, run: clang++-6.0 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-7, run: clang++-7 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-8, run: clang++-8 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-6.0, run: clang++-6.0 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-7, run: clang++-7 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-8, run: clang++-8 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Clang
+        if: runner.os == 'Linux' && matrix.config.compiler_name == 'clang'
+        run: |
+          sudo apt-get update -y
+          # sudo apt-get install libomp5 -y
+          # sudo apt-get install libomp-dev -y
+          sudo apt-get install ${{ matrix.config.compiler }} -y
+
+      - name: build and install library
+        run: |
+          cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+          sudo cmake --build build --target install
+          rm -rf build
+
+      - name: configure
+        run: CC=gcc-9 CXX=g++-9 cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
+
+      - name: build
+        run: cmake --build build --config Debug -j4
+
+      - name: test
+        run: |
+          cd build
+          ctest --build-config Debug
+
+      - name: collect code coverage
+        run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"
