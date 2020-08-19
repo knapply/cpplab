@@ -4,7 +4,7 @@ on: push
 
 jobs:
   windows-mingw:
-    name: ${{ matrix.arch }}
+    name: ${{ matrix.mingw }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -35,3 +35,4 @@ jobs:
           $ENV:PATH="C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\gcc\current\bin;C:\ProgramData\scoop\apps\ninja\current;$ENV:PATH"
           cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
           cmake --build build --config Debug -j4
+          ctest --build-config Debug
