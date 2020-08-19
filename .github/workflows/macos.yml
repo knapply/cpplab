@@ -6,8 +6,11 @@ env:
   CTEST_OUTPUT_ON_FAILURE: 1
 
 jobs:
-  build:
+  macos:
     runs-on: macos-latest
+    env:
+      CC: clang
+      CXX: clang++
 
     steps:
       - uses: actions/checkout@v2
