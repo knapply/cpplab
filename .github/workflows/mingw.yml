@@ -22,7 +22,7 @@ jobs:
           msystem: ${{ matrix.mingw }}
 
       - name: configure
-        run: cmake -Htest -Bbuild
+        run: CXX=${{ matrix.mingw }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
 
       - name: build
         run: cmake --build build --config Debug -j4
