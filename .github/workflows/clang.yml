@@ -17,12 +17,10 @@ jobs:
           - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-8, run: clang++-8 }
           - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
           - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
-          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-11, run: clang++-11 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-7, run: clang++-7 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-8, run: clang++-8 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
-          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-11, run: clang++-11 }
 
     steps:
       - uses: actions/checkout@v2
