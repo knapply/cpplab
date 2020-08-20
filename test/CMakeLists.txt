@@ -28,10 +28,10 @@ option(TEST_INSTALLED_VERSION "Test the version found by find_package" ON)
 # )
 
 
-# CPMAddPackage(
-#     NAME cpplab
-#     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
-# )
+CPMAddPackage(
+    NAME cpplab
+    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+)
 
 # CPMAddPackage(
 #   NAME Format.cmake
@@ -58,14 +58,14 @@ option(TEST_INSTALLED_VERSION "Test the version found by find_package" ON)
 
 # # ---- Add cpplabTests ----
 
-# enable_testing() 
+enable_testing() 
 
 # # Note: doctest and similar testing frameworks can automatically configure CMake tests
 # # For other testing frameworks add the tests target instead:
 # # ADD_TEST(cpplabTests cpplabTests)
 
-# include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
-# doctest_discover_tests(cpplabTests)
+include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
+doctest_discover_tests(cpplabTests)
 
 # # ---- code coverage ----
 
