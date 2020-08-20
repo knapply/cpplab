@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (ENABLE_TEST_COVERAGE)
-  target_compile_options(cpplab INTERFACE -O0 -g -std=gnu++17 -fprofile-arcs -ftest-coverage)
+  target_compile_options(cpplab INTERFACE -O3 -g -std=gnu++17 -fprofile-arcs -ftest-coverage)
   target_link_options(cpplab INTERFACE -fprofile-arcs -ftest-coverage)
 endif()
 

@@ -41,5 +41,6 @@ jobs:
           $ENV:PATH="C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\gcc\current\bin;C:\ProgramData\scoop\apps\ninja\current;$ENV:PATH"
           mkdir build
           cd build
-          cmake .. && cmake --build .
+          cmake ..
+          cmake --build .
           ctest --output-on-failure
