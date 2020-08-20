@@ -2,6 +2,7 @@ on: push
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 name: GCC
 
@@ -36,9 +37,9 @@ jobs:
 
       - name: Build and Test
         run: |
-          cmake .
+          cmake --build build --config Debug -j4
           cd build
-          ctest
+          ctest --build-config Debug
 
       - name: Collect Code Coverage
         run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"

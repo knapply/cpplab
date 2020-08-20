@@ -2,7 +2,6 @@ on: push
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
-  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 name: Clang
 
@@ -65,11 +64,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: CMake
-        uses: jwlawson/actions-setup-cmake@v1.0
-        with:
-          cmake-version: '3.9.x'
 
       - name: Clang
         if: runner.os == 'Linux' && matrix.config.compiler_name == 'clang'
