@@ -36,9 +36,9 @@ jobs:
 
       - name: Build and Test
         run: |
-          cmake --build build --config Debug -j4
+          cmake .
           cd build
-          ctest --build-config Debug
+          ctest
 
       - name: Collect Code Coverage
         run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"
