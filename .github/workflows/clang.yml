@@ -2,7 +2,6 @@ on: push
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
-  CXX: ${{ matrix.config.run }}
 
 name: Clang
 
@@ -21,8 +20,9 @@ jobs:
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-7, run: clang++-7 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-8, run: clang++-8 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
-          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }        
-        
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
+    env:
+      CXX: ${{ matrix.config.run }}
 
     steps:
       - uses: actions/checkout@v2
