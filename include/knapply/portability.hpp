@@ -6,10 +6,10 @@ namespace knapply::portability {
 
 
 #if __cplusplus == 202002L
-#  define KNAPPLY_CPP_20 1
+#  define KNAPPLY_CPP_IS_20 1
 constexpr auto cpp = 20;
 #elif __cplus_plus == 201703L
-#  define KNAPPLY_CPP_17 1
+#  define KNAPPLY_CPP_IS_17 1
 constexpr auto cpp  = 17;
 #endif
 
