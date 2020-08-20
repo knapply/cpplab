@@ -44,12 +44,12 @@ constexpr std::array<char, 16> punct = {
 // clang-format on
 
 
-constexpr bool is_ascii(const char c) {
-  return c >= 0 && c <= 127;
-}
-static_assert(std::all_of(std::cbegin(alpha_numeric),
-                          std::cend(alpha_numeric),
-                          is_ascii));
+// constexpr bool is_ascii(const char c) {
+//   return c >= 0 && c <= 127;
+// }
+// static_assert(std::all_of(std::cbegin(alpha_numeric),
+//                           std::cend(alpha_numeric),
+//                           is_ascii));
 
 
 constexpr bool is_digit(const char c) noexcept {
