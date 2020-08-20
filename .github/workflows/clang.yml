@@ -38,14 +38,6 @@ jobs:
           # sudo apt-get install libomp-dev -y
           sudo apt-get install ${{ matrix.config.compiler }} -y
 
-      - name: Build and Install
-        run: |
-          rm -rf build
-
-
-      - name: Build
-        run: cmake --build build --config Debug -j4
-
       - name: Test
         run: |
           rm -rf build
