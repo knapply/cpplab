@@ -31,14 +31,6 @@ jobs:
       - name: CMake
         uses: jwlawson/actions-setup-cmake@v1.0
 
-      - name: Clang
-        if: runner.os == 'Linux' && matrix.config.compiler_name == 'clang'
-        run: |
-          sudo apt-get update -y
-          # sudo apt-get install libomp5 -y
-          # sudo apt-get install libomp-dev -y
-          sudo apt-get install ${{ matrix.config.compiler }} -y
-
       - name: Test
         run: |
           rm -rf build
