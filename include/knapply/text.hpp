@@ -4,7 +4,10 @@
 #include "common.hpp"
 #include <array>
 #include <string_view>
+#include <vector>
 
+#include <immintrin.h>
+#include <stdint.h>
 
 namespace knapply::text {
 
@@ -39,15 +42,6 @@ constexpr std::array<char, 16> punct = {
     '!', '"', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.',
      '/', '~', '\''};
 // clang-format on
-
-
-template <typename T>
-constexpr bool is_char(const char c) {
-  return std::is_same_v<std::remove_cvref_t<T>, char> ||
-         std::is_same_v<std::remove_cvref_t<T>, wchar_t> ||
-         std::is_same_v<std::remove_cvref_t<T>, char16_t> ||
-         std::is_same_v<std::remove_cvref_t<T>, char32_t>;
-}
 
 
 constexpr bool is_ascii(const char c) {
@@ -158,11 +152,11 @@ static_assert(to_upper('z') == 'Z');
 
 
 constexpr std::string_view
-substring(const std::string_view x,
+substring(const std::string_view s,
           std::size_t            pos,
           std::size_t            n = std::string_view::npos) noexcept {
-  return pos <= std::size(x) ? std::string_view{std::cbegin(x) + pos,
-                                                std::min(n, std::size(x) - pos)}
+  return pos <= std::size(s) ? std::string_view{std::cbegin(s) + pos,
+                                                std::min(n, std::size(s) - pos)}
                              : "";
 }
 static_assert(substring("", 1) == "");
@@ -216,15 +210,15 @@ static_assert(strip("") == "");
 
 
 template <typename int_T = int>
-constexpr int_T toi(const std::string_view x) noexcept {
-  if (x.empty()) {
+constexpr int_T toi(const std::string_view s) noexcept {
+  if (s.empty()) {
     return std::numeric_limits<int_T>::min();
   }
 
   constexpr int_T base = 16;
   int_T           out  = 0;
 
-  for (auto c : x) {
+  for (auto c : s) {
     if (is_digit(c)) {
       c -= '0';
     } else if (is_alpha_upper(c)) {
@@ -250,6 +244,76 @@ static_assert(is_min(toi("~~~")));
 static_assert(is_min(toi("")));
 static_assert(is_min(toi(" 4F")));
 static_assert(is_min(toi(" (9 ")));
+
+
+// template <typename needle_T>
+// really_inline constexpr std::size_t str_count(const std::string_view s,
+//                                               const char             needle)
+//                                               {
+//   std::size_t out = 0;
+//   while (s.find(needle)) {
+//     out++;
+//   }
+//   return out;
+// }
+
+
+// really_inline constexpr std::size_t str_count2(const std::string_view s,
+//                                               const char             needle)
+//                                               {
+//   std::size_t out = 0;
+//   for (std::size_t i = 0; i < std::size(s); ++i) {
+//     if (s[i] == needle) {
+//       out++;
+//     }
+//   }
+//   return out;
+// }
+// static_assert(str_count("a,b,c,d,e", ',') == 4);
+
+
+std::vector<std::string_view> str_split(const std::string_view s,
+                                        const char             delim) {
+  std::vector<std::string_view> out;
+
+  std::string_view::size_type left = 0;
+  for (auto right = s.find(delim); right < std::size(s);) {
+    out.emplace_back(std::cbegin(s) + left, right - left);
+    left  = right + 1;
+    right = s.find(delim, left);
+  }
+
+  out.emplace_back(std::cbegin(s) + left);
+
+  return out;
+}
+
+
+// template <std::size_t n>
+// constexpr std::array<std::string_view, n>
+// str_split_fixed(const std::string_view s, const char delim) {
+//   std::array<std::string_view, n> out;
+
+//   auto                        it   = std::begin(out);
+//   std::string_view::size_type left = 0;
+//   for (auto right = s.find(delim); it != std::cend(out) && right <
+//   std::size(s);
+//        right      = s.find(delim, left)) {
+//     *it  = std::string_view(std::cbegin(s) + left, left + right);
+//     left = right + 1;
+//   }
+
+//   if (it != std::cend(out)) {
+//     *it = std::string_view(std::cbegin(s) + left, std::size(s) - left);
+//   }
+//   return out;
+// }
+// static_assert(std::size(str_split_fixed<4>("a,b,c,d,e", ',')) == 4);
+// constexpr auto test = str_split_fixed<4>("a,b,c,d,e", ',')[0];
+// static_assert(str_split_fixed<4>("a,b,c,d,e", ',')[0] == "a");
+// static_assert(std::size(str_split_fixed<4>("a,b,c,d,e", ','))[1] == "b");
+// static_assert(std::size(str_split_fixed<4>("a,b,c,d,e", ','))[2] == "c");
+// static_assert(std::size(str_split_fixed<4>("a,b,c,d,e", ','))[0] == "a");
 
 
 } // namespace knapply::text

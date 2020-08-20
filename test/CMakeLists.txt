@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-project(cpplabTests
-  LANGUAGES CXX
+project(
+    cpplabTests
+    LANGUAGES CXX
 )
 
+set(CMAKE_CLANG_TIDY ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_MACOSX_RPATH OFF)
 
 option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -14,11 +15,18 @@ option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # ---- Options ----
 
 option(ENABLE_TEST_COVERAGE "Enable test coverage" ON)
-option(TEST_INSTALLED_VERSION "Test the version found by find_package" ON)
+# option(TEST_INSTALLED_VERSION "Test the version found by find_package" ON)
 
 # ---- Dependencies ----
 
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include") 
+
 include(../cmake/CPM.cmake)
+
+CPMAddPackage(
+    NAME cpplab
+    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+)
 
 CPMAddPackage(
   NAME doctest
@@ -26,11 +34,6 @@ CPMAddPackage(
   GIT_TAG 2.3.7
 )
 
-
-CPMAddPackage(
-    NAME cpplab
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
-)
 
 CPMAddPackage(
   NAME Format.cmake
