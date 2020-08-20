@@ -31,20 +31,12 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install ${{ matrix.config.compiler }} -y
 
-      - name: Build and Install
-        run: |
-          cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
-          sudo cmake --build build --target install
-          rm -rf build
-
       - name: Configure
         run: CXX=${{ matrix.config.run }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
 
-      - name: Build
-        run: cmake --build build --config Debug -j4
-
-      - name: Test
+      - name: Build and Test
         run: |
+          cmake --build build --config Debug -j4
           cd build
           ctest --build-config Debug
 
