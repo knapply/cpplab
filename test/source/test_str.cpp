@@ -141,10 +141,12 @@ TEST_CASE("str::split") {
   CHECK_EQ(str_split[8], "1");
 }
 
-TEST_CASE("str::split") {
+TEST_CASE("str::split_fixed") {
+  using namespace knapply::str;
+
   constexpr auto csv = ",aA,bB,c,d , e ,, ,1";
 
-  constexpr auto str_split_fixed = knapply::str::split_fixed<9>(csv, ',');
+  constexpr auto str_split_fixed = split_fixed<9>(csv, ',');
   CHECK_NOTHROW(static_assert(str_split_fixed[0] == ""));
   CHECK_NOTHROW(static_assert(str_split_fixed[1] == "aA"));
   CHECK_NOTHROW(static_assert(str_split_fixed[2] == "bB"));
@@ -155,7 +157,7 @@ TEST_CASE("str::split") {
   CHECK_NOTHROW(static_assert(str_split_fixed[7] == " "));
   CHECK_NOTHROW(static_assert(str_split_fixed[8] == "1"));
 
-  constexpr auto str_split_fixed2 = knapply::str::split_fixed<8>(csv, ',');
+  constexpr auto str_split_fixed2 = split_fixed<8>(csv, ',');
   CHECK_NOTHROW(static_assert(str_split_fixed2[0] == ""));
   CHECK_NOTHROW(static_assert(str_split_fixed2[1] == "aA"));
   CHECK_NOTHROW(static_assert(str_split_fixed2[2] == "bB"));
@@ -166,6 +168,9 @@ TEST_CASE("str::split") {
   CHECK_NOTHROW(static_assert(str_split_fixed2[7] == " "));
 
   constexpr auto str_split_arabic = "أَلْحُرُوف ٱلْعَرَبِيَّة";
+  CHECK_NOTHROW(static_assert(split_fixed<2>(str_split_arabic, ' ')[1] == "ٱلْعَرَبِيَّة"));
+
+  constexpr auto str_split_arabic2 = "أَلْحُرُوف   ٱلْعَرَبِيَّة";
   CHECK_NOTHROW(
-      static_assert(knapply::str::split_fixed<2>(str_split_arabic, ' ')[1] == "ٱلْعَرَبِيَّة"));
+      static_assert(split_fixed<2>(str_split_arabic2, "   "sv)[1] == "ٱلْعَرَبِيَّة"));
 }
