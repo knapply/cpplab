@@ -42,8 +42,8 @@ jobs:
       - name: Configure
         run: CXX=${{ matrix.config.run }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
 
-      # - name: Build
-      #   run: cmake --build build --config Debug -j4
+      - name: Build
+        run: cmake --build build --config Debug -j4
 
       - name: Test
         run: |
