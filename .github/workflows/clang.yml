@@ -81,6 +81,7 @@ jobs:
 
       - name: Build and Test
         run: |
-          cmake .
-          cd build
-          ctest
+          mkdir build &&
+          cd build &&
+          cmake --build . &&
+          ctest -j --output-on-failure
