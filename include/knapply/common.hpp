@@ -15,6 +15,11 @@ inline constexpr bool is_min(const int_T x) {
 }
 
 
+template <class T, class U>
+inline constexpr bool is_sameish_v =
+    std::is_same_v<std::remove_cvref<T>, std::remove_cvref<U>>;
+
+
 } // namespace knapply
 
 

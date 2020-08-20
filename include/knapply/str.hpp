@@ -230,8 +230,7 @@ template <typename needle_T>
 constexpr std::size_t count(const std::string_view s, const needle_T needle) noexcept {
   std::size_t out = 0;
 
-  if constexpr (BUILTIN_CONSTEXPR_ALGOS ||
-                std::is_same_v<std::remove_all_extents_t<needle_T>, std::string_view>) {
+  if constexpr (BUILTIN_CONSTEXPR_ALGOS || is_sameish_v<needle_T, std::string_view>) {
     for (auto loc = s.find(needle); loc < std::size(s); loc = s.find(needle, loc + 1)) {
       out++;
     }
@@ -277,8 +276,7 @@ constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
   auto        it   = std::begin(out);
   std::size_t left = 0;
 
-  if constexpr (BUILTIN_CONSTEXPR_ALGOS ||
-                std::is_same_v<std::remove_all_extents_t<needle_T>, std::string_view>) {
+  if constexpr (BUILTIN_CONSTEXPR_ALGOS || is_sameish_v<needle_T, std::string_view>) {
     for (auto right = s.find(delim); right < std::size(s) && it != std::cend(out);) {
       *it++ = std::string_view(std::cbegin(s) + left, right - left);
       left  = right + offset;
