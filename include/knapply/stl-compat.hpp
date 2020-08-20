@@ -24,7 +24,13 @@ using remove_cvref_t = typename remove_cvref<T>::type;
 
 #ifdef __cpp_lib_constexpr_algorithms
 #  include <algorithm>
+namespace knapply {
+constexpr auto BUILTIN_CONSTEXPR_ALGOS = true;
+}
 #else
+namespace knapply {
+constexpr auto BUILTIN_CONSTEXPR_ALGOS = false;
+}
 namespace std {
 template <class InputIt, class T>
 constexpr InputIt find(InputIt first, InputIt last, const T& value) {
@@ -60,10 +66,8 @@ constexpr InputIt find_if_not(InputIt first, InputIt last, UnaryPredicate q) {
 
 
 template <class InputIt, class ForwardIt>
-constexpr InputIt find_first_of(InputIt   first,
-                                InputIt   last,
-                                ForwardIt s_first,
-                                ForwardIt s_last) {
+constexpr InputIt
+find_first_of(InputIt first, InputIt last, ForwardIt s_first, ForwardIt s_last) {
   for (; first != last; ++first) {
     for (ForwardIt it = s_first; it != s_last; ++it) {
       if (*first == *it) {

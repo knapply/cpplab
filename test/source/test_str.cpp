@@ -118,10 +118,10 @@ TEST_CASE("str::count") {
 
   CHECK_NOTHROW(static_assert(count("", ',') == 0));
   CHECK_NOTHROW(static_assert(count(" , , ", ',') == 2));
-  CHECK_NOTHROW(static_assert(count(" 11 , 11 ", '1') == 4));
-  CHECK_NOTHROW(static_assert(count(" 11 , 11 ", "1") == 4));
-  CHECK_NOTHROW(static_assert(count(" 11 , 11 ", "11") == 2));
-  CHECK_NOTHROW(static_assert(count("11 , 11 ", " , 11") == 1));
+  CHECK_NOTHROW(static_assert(count(" 11 , 11 "sv, '1') == 4));
+  CHECK_NOTHROW(static_assert(count(" 11 , 11 "sv, "1"sv) == 4));
+  CHECK_NOTHROW(static_assert(count(" 11 , 11 "sv, "11"sv) == 2));
+  CHECK_NOTHROW(static_assert(count("11 , 11 "sv, " , 11"sv) == 1));
 }
 
 

@@ -13,8 +13,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
-          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-9, run: clang++-6 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-9, run: clang++-7 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-9, run: clang++-8 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
+          - { os: ubuntu-18.04, compiler_name: clang, compiler: clang-9, run: clang++-10 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-6 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-7 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-8 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-10 }
     env:
       CXX: ${{ matrix.config.run }}
 

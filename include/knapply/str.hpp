@@ -1,14 +1,24 @@
 #ifndef __KNAPPLY__TEXT_HPP
 #define __KNAPPLY__TEXT_HPP
 
+
 #include "common.hpp"
+
+
 #include <array>
+#include <bits/c++config.h>
+#include <cctype>
+#include <iterator>
 #include <string>
 #include <string_view>
+#include <cstring>
+#include <type_traits>
 #include <vector>
 
 
 namespace knapply::str {
+
+using namespace std::literals::string_view_literals;
 
 
 constexpr std::array<char, 10> digits = {
@@ -217,20 +227,28 @@ static_assert(toi(" (9 ") == std::numeric_limits<int>::min());
 
 
 template <typename needle_T>
-really_inline constexpr std::size_t count(const std::string_view s,
-                                          const needle_T         needle) noexcept {
+constexpr std::size_t count(const std::string_view s, const needle_T needle) noexcept {
   std::size_t out = 0;
-  for (auto loc = s.find(needle); loc < std::size(s); loc = s.find(needle, loc + 1)) {
-    out++;
+
+  if constexpr (BUILTIN_CONSTEXPR_ALGOS ||
+                std::is_same_v<std::remove_all_extents_t<needle_T>, std::string_view>) {
+    for (auto loc = s.find(needle); loc < std::size(s); loc = s.find(needle, loc + 1)) {
+      out++;
+    }
+  } else {
+    for (auto loc = std::find(std::cbegin(s), std::cend(s), needle); loc != std::cend(s);
+         loc      = std::find(loc + 1, std::cend(s), needle)) {
+      out++;
+    }
   }
   return out;
 }
-// static_assert(count("", ',') == 0);
-// static_assert(count(" , , ", ',') == 2);
-// static_assert(count(std::string_view(" 11 , 11 "), '1') == 4);
-// static_assert(count(" 11 , 11 ", "1") == 4);
-// static_assert(count(" 11 , 11 ", "11") == 2);
-// static_assert(count("11 , 11 ", " , 11") == 1);
+static_assert(count("", ',') == 0);
+static_assert(count(" , , ", ',') == 2);
+static_assert(count(std::string_view(" 11 , 11 "), '1') == 4);
+static_assert(count(" 11 , 11 ", "1"sv) == 4);
+static_assert(count(" 11 , 11 ", "11"sv) == 2);
+static_assert(count("11 , 11 ", " , 11"sv) == 1);
 
 
 template <typename delim_T>
@@ -246,27 +264,38 @@ std::vector<std::string_view> split(const std::string_view s,
   return out;
 }
 
-
-template <std::size_t n>
+template <std::size_t n, typename needle_T>
 constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
-                                                      const char delim) noexcept {
+                                                      const needle_T delim) noexcept {
+  std::size_t offset = 1;
+  if constexpr (std::is_same_v<std::remove_all_extents_t<needle_T>, std::string_view>) {
+    offset = std::size(delim);
+  }
+
   std::array<std::string_view, n> out;
 
   auto        it   = std::begin(out);
   std::size_t left = 0;
 
-  for (auto right = s.find(delim); right < std::size(s) && it != std::cend(out);) {
-    *it++ = std::string_view(std::cbegin(s) + left, right - left);
-    left  = right + 1;
-    right = s.find(delim, left);
+  if constexpr (BUILTIN_CONSTEXPR_ALGOS ||
+                std::is_same_v<std::remove_all_extents_t<needle_T>, std::string_view>) {
+    for (auto right = s.find(delim); right < std::size(s) && it != std::cend(out);) {
+      *it++ = std::string_view(std::cbegin(s) + left, right - left);
+      left  = right + offset;
+      right = s.find(delim, left);
+    }
+  } else {
+    for (auto right = std::find(std::cbegin(s), std::cend(s), delim);
+         right != std::cend(s) && it != std::cend(out);) {
+      *it++ = std::string_view(std::cbegin(s) + left,
+                               std::distance(std::cbegin(s), right) - left);
+      left  = std::distance(std::cbegin(s), right) + offset;
+      right = std::find(std::cbegin(s) + left, std::cend(s), delim);
+    }
   }
 
   if (it != std::cend(out)) {
-    *it = std::string_view(std::cbegin(s) + left);
-  }
-
-  if (it != std::cend(out)) {
-    *it = std::string_view(std::cbegin(s) + left);
+    *it = std::string_view(std::data(s) + left);
   }
 
   return out;
@@ -274,7 +303,6 @@ constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
 constexpr auto csv             = ",aA,bB,c,d , e ,, ,1";
 constexpr auto str_split_fixed = split_fixed<9>(csv, ',');
 static_assert(str_split_fixed[0] == "");
-constexpr auto t = str_split_fixed[1];
 static_assert(str_split_fixed[1] == "aA");
 static_assert(str_split_fixed[2] == "bB");
 static_assert(str_split_fixed[3] == "c");
@@ -284,7 +312,7 @@ static_assert(str_split_fixed[6] == "");
 static_assert(str_split_fixed[7] == " ");
 static_assert(str_split_fixed[8] == "1");
 
-constexpr std::array<std::string_view, 8> str_split_fixed2 = split_fixed<8>(csv, ',');
+constexpr auto str_split_fixed2 = split_fixed<8>(csv, ',');
 static_assert(str_split_fixed2[0] == "");
 static_assert(str_split_fixed2[1] == "aA");
 static_assert(str_split_fixed2[2] == "bB");
@@ -294,8 +322,11 @@ static_assert(str_split_fixed2[5] == " e ");
 static_assert(str_split_fixed2[6] == "");
 static_assert(str_split_fixed2[7] == " ");
 
-constexpr auto str_split_arabic = "أَلْحُرُوف ٱلْعَرَبِيَّة";
-static_assert(split_fixed<2>(str_split_arabic, ' ')[1] == "ٱلْعَرَبِيَّة");
+static_assert(split_fixed<2>(csv, " , "sv)[0] == ",aA,bB,c,d");
+static_assert(split_fixed<2>(csv, " , "sv)[1] == "e ,, ,1");
+
+constexpr auto str_split_arabic = "أَلْحُرُوف   ٱلْعَرَبِيَّة";
+static_assert(split_fixed<2>(str_split_arabic, "   "sv)[1] == "ٱلْعَرَبِيَّة");
 
 
 } // namespace knapply::str

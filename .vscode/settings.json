@@ -57,10 +57,10 @@
     "editor.rulers": [
         90
     ],
-    "clangd.arguments": [
-        "-log=verbose",
-        "-pretty",
-        "--background-index",
-        "--all-scopes-completion"
-    ],
+    // "clangd.arguments": [
+    //     "-log=verbose",
+    //     "-pretty",
+    //     "--background-index",
+    //     "--all-scopes-completion"
+    // ],
 }
