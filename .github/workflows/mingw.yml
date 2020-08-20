@@ -39,6 +39,7 @@ jobs:
         shell: powershell
         run: |
           $ENV:PATH="C:\ProgramData\scoop\shims;C:\ProgramData\scoop\apps\gcc\current\bin;C:\ProgramData\scoop\apps\ninja\current;$ENV:PATH"
-          cmake --build build --config Debug -j4
-          cd build
-          ctest --build-config Debug
+          mkdir build
+          cd build 
+          cmake ..
+          ctest
