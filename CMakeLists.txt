@@ -95,16 +95,16 @@ packageProject(
 
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-project(
-    cpplabTests
-    LANGUAGES CXX
-)
+# project(
+#     cpplabTests
+#     LANGUAGES CXX
+# )
 
-set(CMAKE_CLANG_TIDY ON)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# set(CMAKE_CLANG_TIDY ON)
+# set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# option(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
 # ---- Options ----
@@ -117,23 +117,23 @@ option(TEST_INSTALLED_VERSION "Test the version found by find_package" ON)
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include") 
 
 
-CPMAddPackage(
-    NAME cpplab
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
-)
+# CPMAddPackage(
+#     NAME cpplab
+#     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+# )
 
-CPMAddPackage(
-  NAME doctest
-  GITHUB_REPOSITORY onqtam/doctest
-  GIT_TAG 2.3.7
-)
+# CPMAddPackage(
+#   NAME doctest
+#   GITHUB_REPOSITORY onqtam/doctest
+#   GIT_TAG 2.3.7
+# )
 
 
-CPMAddPackage(
-  NAME Format.cmake
-  GITHUB_REPOSITORY TheLartians/Format.cmake
-  VERSION 1.4
-)
+# CPMAddPackage(
+#   NAME Format.cmake
+#   GITHUB_REPOSITORY TheLartians/Format.cmake
+#   VERSION 1.4
+# )
 
 # ---- Create binary ----
 
@@ -154,7 +154,7 @@ endif()
 
 # ---- Add cpplabTests ----
 
-enable_testing() 
+# enable_testing() 
 
 # Note: doctest and similar testing frameworks can automatically configure CMake tests
 # For other testing frameworks add the tests target instead:
@@ -163,9 +163,9 @@ enable_testing()
 include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
 doctest_discover_tests(cpplabTests)
 
-# ---- code coverage ----
+# # ---- code coverage ----
 
-if (ENABLE_TEST_COVERAGE)
-  target_compile_options(cpplab INTERFACE -O0 -g -std=gnu++17 -fprofile-arcs -ftest-coverage)
-  target_link_options(cpplab INTERFACE -fprofile-arcs -ftest-coverage)
-endif()
+# if (ENABLE_TEST_COVERAGE)
+#   target_compile_options(cpplab INTERFACE -O0 -g -std=gnu++17 -fprofile-arcs -ftest-coverage)
+#   target_link_options(cpplab INTERFACE -fprofile-arcs -ftest-coverage)
+# endif()
