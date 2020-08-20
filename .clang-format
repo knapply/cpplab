@@ -16,7 +16,7 @@ BinPackParameters: false
 
 BreakBeforeTernaryOperators: true
 
-ColumnLimit: 80
+ColumnLimit: 90
 
 DerivePointerAlignment: false
 

@@ -12,8 +12,7 @@
 #include "knapply/portability.hpp"
 #include "knapply/stl-compat.hpp"
 #include "knapply/common.hpp"
-#include "knapply/algorithms.hpp"
-#include "knapply/text.hpp"
+#include "knapply/str.hpp"
 
 
 #endif

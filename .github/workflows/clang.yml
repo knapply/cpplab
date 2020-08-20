@@ -22,10 +22,15 @@ jobs:
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-7, run: clang++-7 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-8, run: clang++-8 }
           - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-9 }
-          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-10, run: clang++-10 }
+          - { os: ubuntu-20.04, compiler_name: clang, compiler: clang-9, run: clang++-10 }
+    env:
+      CXX: ${{ matrix.config.run }}
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: CMake
+        uses: jwlawson/actions-setup-cmake@v1.0
 
       - name: Clang
         if: runner.os == 'Linux' && matrix.config.compiler_name == 'clang'
@@ -35,22 +40,10 @@ jobs:
           # sudo apt-get install libomp-dev -y
           sudo apt-get install ${{ matrix.config.compiler }} -y
 
-      - name: Build and Install
-        run: |
-          cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
-          sudo cmake --build build --target install
-          rm -rf build
-
-      - name: Configure
-        run: CXX=${{ matrix.config.run }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
-
-      - name: Build
-        run: cmake --build build --config Debug -j4
-
       - name: Test
         run: |
+          rm -rf build
+          mkdir build
           cd build
-          ctest --build-config Debug
-
-      - name: Collect Code Coverage
-        run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"
+          cmake .. && cmake --build .
+          ctest --output-on-failure
