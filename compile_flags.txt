@@ -1,0 +1,7 @@
+-std=c++17
+-I/home/brendan/cpplab/include/
+-Wall
+-Wextra
+-Weffc++
+-Wstrict-aliasing
+-Werror

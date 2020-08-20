@@ -3,6 +3,7 @@ Language: Cpp
 Standard: Cpp11
 BasedOnStyle: LLVM
 
+
 AlignConsecutiveDeclarations: true
 AlignConsecutiveAssignments: true
 AlignTrailingComments: true
@@ -16,7 +17,7 @@ BinPackParameters: false
 
 BreakBeforeTernaryOperators: true
 
-ColumnLimit: 80
+ColumnLimit: 90
 
 DerivePointerAlignment: false
 

@@ -1,5 +1,4 @@
 {
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
         "*.rmd": "markdown",
         "cctype": "cpp",
@@ -49,6 +48,19 @@
         "thread": "cpp",
         "typeinfo": "cpp",
         "string_view": "cpp",
-        "unordered_map": "cpp"
-    }
+        "unordered_map": "cpp",
+        "array": "cpp"
+    },
+    "editor.detectIndentation": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.rulers": [
+        90
+    ],
+    "clangd.arguments": [
+        "-log=verbose",
+        "-pretty",
+        "--background-index",
+        "--all-scopes-completion"
+    ],
 }

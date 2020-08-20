@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/brendan/cpplab/build/_deps/doctest-build",
-  "command": "/usr/bin/g++-10 -DDOCTEST_CONFIG_IMPLEMENT_WITH_MAIN -I/home/brendan/cpplab/build/_deps/doctest-src -O3 -DNDEBUG -std=gnu++11 -o CMakeFiles/doctest_with_main.dir/doctest/parts/doctest.cpp.o -c /home/brendan/cpplab/build/_deps/doctest-src/doctest/parts/doctest.cpp",
-  "file": "/home/brendan/cpplab/build/_deps/doctest-src/doctest/parts/doctest.cpp"
-}
-]
