@@ -65,6 +65,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: CMake
+        uses: jwlawson/actions-setup-cmake@v1.0
+        with:
+          cmake-version: '3.9.x'
+
       - name: Clang
         if: runner.os == 'Linux' && matrix.config.compiler_name == 'clang'
         run: |
@@ -72,9 +77,6 @@ jobs:
           # sudo apt-get install libomp5 -y
           # sudo apt-get install libomp-dev -y
           sudo apt-get install ${{ matrix.config.compiler }} -y
-
-      - name: Configure
-        run: CXX=${{ matrix.config.run }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
 
       - name: Configure
         run: CXX=${{ matrix.config.run }} cmake -Htest -Bbuild -DENABLE_TEST_COVERAGE=1
