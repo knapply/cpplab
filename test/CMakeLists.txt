@@ -7,8 +7,8 @@
 set(CMAKE_CXX_STANDARD 17)
 
 
-target_compile_options(cpplab INTERFACE -O0 -g -std=gnu++17 -fprofile-arcs -ftest-coverage)
-target_link_options(cpplab INTERFACE -fprofile-arcs -ftest-coverage)
+target_compile_options(cpplab INTERFACE -O0 -g -std=gnu++17 -fprofile-arcs -ftest-coverage --coverage)
+target_link_options(cpplab INTERFACE -fprofile-arcs -ftest-coverage --coverage)
 
 
 # cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
