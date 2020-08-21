@@ -40,6 +40,8 @@ constexpr std::array<char, 6> whitespace = {' ', '\f', '\n', '\r', '\t', '\v'};
 
 constexpr std::array<char, 16> punct = {
     '!', '"', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', '~', '\''};
+
+
 } // namespace ascii
 
 
@@ -74,6 +76,7 @@ namespace ascii {
 constexpr bool is_digit(const char c) noexcept {
   return c >= 48 && c <= 57;
 }
+static_assert(is_digit('1'));
 static_assert(std::all_of(std::cbegin(digits), std::cend(digits), is_digit));
 static_assert(std::none_of(std::cbegin(alpha), std::cend(alpha), is_digit));
 
@@ -252,7 +255,6 @@ static_assert(toi(" (9 ") == std::numeric_limits<int>::min());
 template <typename needle_T>
 constexpr std::size_t count(const std::string_view s, const needle_T needle) noexcept {
   std::size_t out = 0;
-
   if constexpr (is_same_ish_v<needle_T, std::string_view>) {
     for (auto loc = s.find(needle); loc < std::size(s); loc = s.find(needle, loc + 1)) {
       out++;
