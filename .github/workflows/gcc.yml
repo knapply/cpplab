@@ -42,7 +42,7 @@ jobs:
           rm -rf build
           mkdir build
           cd build
-          cmake .. -DENABLE_TEST_COVERAGE=1 && cmake --build .
+          cmake .. -Htest -Bbuild -DENABLE_TEST_COVERAGE=1 && cmake --build .
           ctest --output-on-failure
           
       - name: Collect Code Coverage
