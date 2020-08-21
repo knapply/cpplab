@@ -5,22 +5,13 @@
 #include "common.hpp"
 
 
-#include <array>
-#include <bits/c++config.h>
-#include <cctype>
-#include <iterator>
-#include <string>
-#include <string_view>
-#include <cstring>
-#include <type_traits>
-#include <vector>
+namespace knapply::txt {
 
-
-namespace knapply::str {
 
 using namespace std::literals::string_view_literals;
 
 
+namespace ascii {
 constexpr std::array<char, 10> digits = {
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
@@ -49,6 +40,35 @@ constexpr std::array<char, 6> whitespace = {' ', '\f', '\n', '\r', '\t', '\v'};
 
 constexpr std::array<char, 16> punct = {
     '!', '"', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', '~', '\''};
+} // namespace ascii
+
+
+template <class char_T>
+constexpr bool is_ascii(const char_T c) noexcept {
+  if constexpr (is_char_ish_v<char_T>) {
+    if constexpr (std::is_unsigned_v<char_T>) {
+      return c <= 127;
+    } else {
+      return c <= 127 && c >= 0;
+    }
+  } else {
+    return false;
+  }
+}
+static_assert(std::all_of(std::cbegin(ascii::alpha_numeric),
+                          std::cend(ascii::alpha_numeric),
+                          is_ascii<char>));
+static_assert(is_ascii(static_cast<unsigned char>(1)));
+static_assert(!is_ascii(static_cast<char>(-1)));
+static_assert(!is_ascii(1));
+static_assert(!is_ascii(static_cast<int8_t>(1)));
+static_assert(!is_ascii(static_cast<uint16_t>(1)));
+static_assert(!is_ascii(static_cast<uint32_t>(1)));
+static_assert(!is_ascii(static_cast<uint64_t>(1)));
+static_assert(!is_ascii("رَ"sv));
+
+
+namespace ascii {
 
 
 constexpr bool is_digit(const char c) noexcept {
@@ -134,6 +154,9 @@ static_assert(to_upper('a') == 'A');
 static_assert(to_upper('z') == 'Z');
 
 
+} // namespace ascii
+
+
 constexpr std::string_view sub(const std::string_view s,
                                std::size_t            pos,
                                std::size_t n = std::string_view::npos) noexcept {
@@ -141,30 +164,26 @@ constexpr std::string_view sub(const std::string_view s,
              ? std::string_view{std::cbegin(s) + pos, std::min(n, std::size(s) - pos)}
              : "";
 }
-namespace test {
 static_assert(sub("", 1) == "");
 static_assert(sub("a", 1) == "");
 static_assert(sub("abc", 0, 4) == "abc");
 static_assert(sub("abc", 1) == "bc");
 static_assert(sub("abc", 1, 1) == "b");
-} // namespace test
 
 
 constexpr std::string_view trim_left(const std::string_view s) noexcept {
   std::size_t i = 0;
   for (; i < std::size(s); ++i) {
-    if (!is_space(s[i])) {
+    if (!ascii::is_space(s[i])) {
       return std::string_view(std::cbegin(s) + i);
     }
   }
   return i != std::size(s) ? s : "";
 }
-namespace test {
 static_assert(trim_left("  123  ") == "123  ");
 static_assert(trim_left("     ") == "");
 static_assert(trim_left(" ") == "");
 static_assert(trim_left("") == "");
-} // namespace test
 
 
 constexpr std::string_view trim_right(const std::string_view s) noexcept {
@@ -173,29 +192,25 @@ constexpr std::string_view trim_right(const std::string_view s) noexcept {
   }
   std::size_t i = std::size(s) - 1;
   for (; i > 0; --i) {
-    if (!is_space(s[i])) {
+    if (!ascii::is_space(s[i])) {
       return std::string_view(std::cbegin(s), i + 1);
     }
   }
   return i != 0 ? s : "";
 }
-namespace test {
 static_assert(trim_right("  123  ") == "  123");
 static_assert(trim_right("     ") == "");
 static_assert(trim_right(" ") == "");
 static_assert(trim_right("") == "");
-} // namespace test
 
 
 constexpr std::string_view trim(const std::string_view s) noexcept {
   return trim_right(trim_left(s));
 }
-namespace test {
 static_assert(trim("  123  ") == "123");
 static_assert(trim("     ") == "");
 static_assert(trim(" ") == "");
 static_assert(trim("") == "");
-} // namespace test
 
 
 template <typename int_T = int>
@@ -207,11 +222,11 @@ constexpr int_T toi(const std::string_view s) noexcept {
   constexpr int_T base = 16;
   int_T           out  = 0;
   for (auto c : s) {
-    if (is_digit(c)) {
+    if (ascii::is_digit(c)) {
       c -= '0';
-    } else if (is_upper(c)) {
+    } else if (ascii::is_upper(c)) {
       c -= 'A' - 10;
-    } else if (is_lower(c)) {
+    } else if (ascii::is_lower(c)) {
       c -= 'a' - 10;
     } else {
       return std::numeric_limits<int_T>::min();
@@ -222,7 +237,6 @@ constexpr int_T toi(const std::string_view s) noexcept {
 
   return out;
 }
-namespace test {
 static_assert(toi("4F") == 79);
 static_assert(toi("66") == 102);
 static_assert(toi("f1") == 241);
@@ -233,14 +247,13 @@ static_assert(toi("~~~") == std::numeric_limits<int>::min());
 static_assert(toi("") == std::numeric_limits<int>::min());
 static_assert(toi(" 4F") == std::numeric_limits<int>::min());
 static_assert(toi(" (9 ") == std::numeric_limits<int>::min());
-} // namespace test
 
 
 template <typename needle_T>
 constexpr std::size_t count(const std::string_view s, const needle_T needle) noexcept {
   std::size_t out = 0;
 
-  if constexpr (BUILTIN_CONSTEXPR_ALGOS || is_sameish_v<needle_T, std::string_view>) {
+  if constexpr (is_same_ish_v<needle_T, std::string_view>) {
     for (auto loc = s.find(needle); loc < std::size(s); loc = s.find(needle, loc + 1)) {
       out++;
     }
@@ -252,14 +265,12 @@ constexpr std::size_t count(const std::string_view s, const needle_T needle) noe
   }
   return out;
 }
-namespace test {
 static_assert(count("", ',') == 0);
 static_assert(count(" , , ", ',') == 2);
-static_assert(count(std::string_view(" 11 , 11 "), '1') == 4);
+static_assert(count(" 11 , 11 "sv, '1') == 4);
 static_assert(count(" 11 , 11 ", "1"sv) == 4);
 static_assert(count(" 11 , 11 ", "11"sv) == 2);
 static_assert(count("11 , 11 ", " , 11"sv) == 1);
-} // namespace test
 
 
 template <typename delim_T>
@@ -275,6 +286,7 @@ std::vector<std::string_view> split(const std::string_view s,
   return out;
 }
 
+
 template <std::size_t n, typename needle_T>
 constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
                                                       const needle_T delim) noexcept {
@@ -283,7 +295,7 @@ constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
   auto        it   = std::begin(out);
   std::size_t left = 0;
 
-  if constexpr (BUILTIN_CONSTEXPR_ALGOS || is_sameish_v<needle_T, std::string_view>) {
+  if constexpr (is_same_ish_v<needle_T, std::string_view>) {
     for (auto right = s.find(delim); right < std::size(s) && it != std::cend(out);) {
       *it++ = std::string_view(std::cbegin(s) + left, right - left);
       left  = right + std::size(delim);
@@ -306,38 +318,35 @@ constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
 
   return out;
 }
-namespace test {
-constexpr auto csv             = ",aA,bB,c,d , e ,, ,1";
-constexpr auto str_split_fixed = split_fixed<9>(csv, ',');
-static_assert(str_split_fixed[0] == "");
-static_assert(str_split_fixed[1] == "aA");
-static_assert(str_split_fixed[2] == "bB");
-static_assert(str_split_fixed[3] == "c");
-static_assert(str_split_fixed[4] == "d ");
-static_assert(str_split_fixed[5] == " e ");
-static_assert(str_split_fixed[6] == "");
-static_assert(str_split_fixed[7] == " ");
-static_assert(str_split_fixed[8] == "1");
-
-constexpr auto str_split_fixed2 = split_fixed<8>(csv, ',');
-static_assert(str_split_fixed2[0] == "");
-static_assert(str_split_fixed2[1] == "aA");
-static_assert(str_split_fixed2[2] == "bB");
-static_assert(str_split_fixed2[3] == "c");
-static_assert(str_split_fixed2[4] == "d ");
-static_assert(str_split_fixed2[5] == " e ");
-static_assert(str_split_fixed2[6] == "");
-static_assert(str_split_fixed2[7] == " ");
-
-static_assert(split_fixed<2>(csv, " , "sv)[0] == ",aA,bB,c,d");
-static_assert(split_fixed<2>(csv, " , "sv)[1] == "e ,, ,1");
-
-constexpr auto str_split_arabic = "أَلْحُرُوف   ٱلْعَرَبِيَّة";
-static_assert(split_fixed<2>(str_split_arabic, "   "sv)[1] == "ٱلْعَرَبِيَّة");
-} // namespace test
+namespace test_vals {
+constexpr auto csv    = ",aA,bB,c,d , e ,, ,1";
+constexpr auto fixed  = split_fixed<9>(csv, ',');
+constexpr auto fixed2 = split_fixed<8>(csv, ',');
+constexpr auto arabic = "أَلْحُرُوف   ٱلْعَرَبِيَّة";
+} // namespace test_vals
+static_assert(test_vals::fixed[0] == "");
+static_assert(test_vals::fixed[1] == "aA");
+static_assert(test_vals::fixed[2] == "bB");
+static_assert(test_vals::fixed[3] == "c");
+static_assert(test_vals::fixed[4] == "d ");
+static_assert(test_vals::fixed[5] == " e ");
+static_assert(test_vals::fixed[6] == "");
+static_assert(test_vals::fixed[7] == " ");
+static_assert(test_vals::fixed[8] == "1");
+static_assert(test_vals::fixed2[0] == "");
+static_assert(test_vals::fixed2[1] == "aA");
+static_assert(test_vals::fixed2[2] == "bB");
+static_assert(test_vals::fixed2[3] == "c");
+static_assert(test_vals::fixed2[4] == "d ");
+static_assert(test_vals::fixed2[5] == " e ");
+static_assert(test_vals::fixed2[6] == "");
+static_assert(test_vals::fixed2[7] == " ");
+static_assert(split_fixed<2>(test_vals::csv, " , "sv)[0] == ",aA,bB,c,d");
+static_assert(split_fixed<2>(test_vals::csv, " , "sv)[1] == "e ,, ,1");
+static_assert(split_fixed<2>(test_vals::arabic, "   "sv)[1] == "ٱلْعَرَبِيَّة");
 
 
-} // namespace knapply::str
+} // namespace knapply::txt
 
 
 #endif

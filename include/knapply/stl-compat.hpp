@@ -4,7 +4,7 @@
 #include <iterator>
 #include <type_traits>
 
-#ifndef __cpp_lib_remove_cvref
+#if !defined(__cpp_lib_remove_cvref) || __cpp_lib_remove_cvref < 201711L
 namespace std {
 
 template <class T>
@@ -20,7 +20,7 @@ using remove_cvref_t = typename remove_cvref<T>::type;
 #endif
 
 
-#ifndef __cpp_lib_ssize
+#if !defined(__cpp_lib_ssize) || __cpp_lib_ssize < 201902L
 namespace std {
 
 
@@ -36,7 +36,7 @@ constexpr auto ssize(const C& c)
 #endif
 
 
-#ifdef __cpp_lib_constexpr_algorithms
+#if defined(__cpp_lib_constexpr_algorithms) && __cpp_lib_constexpr_algorithms >= 201806L
 
 
 #  include <algorithm>
@@ -46,8 +46,8 @@ constexpr auto BUILTIN_CONSTEXPR_ALGOS = true;
 
 
 #else
-namespace knapply {
-constexpr auto BUILTIN_CONSTEXPR_ALGOS = false;
+namespace knapply::portability {
+constexpr auto has_builtin_constexpr_algos = false;
 }
 
 
