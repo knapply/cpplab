@@ -146,7 +146,7 @@ set_target_properties(cpplabTests PROPERTIES CXX_STANDARD 17)
 # enable compiler warnings
 if (NOT TEST_INSTALLED_VERSION)
   if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    target_compile_options(cpplab INTERFACE -Wall -pedantic -Wextra -Werror)
+    target_compile_options(cpplab INTERFACE -Wlifetime -Wall -pedantic -Wextra -Werror)
   elseif(MSVC)
     target_compile_options(cpplab INTERFACE /W4 /WX)
   endif()

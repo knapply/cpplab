@@ -7,26 +7,53 @@
 #ifndef __cpp_lib_remove_cvref
 namespace std {
 
-template <class T> struct remove_cvref {
+template <class T>
+struct remove_cvref {
   typedef std::remove_cv_t<std::remove_reference_t<T>> type;
 };
-template <class T> using remove_cvref_t = typename remove_cvref<T>::type;
+template <class T>
+using remove_cvref_t = typename remove_cvref<T>::type;
+
+} // namespace std
+
+
+#endif
+
+
+#ifndef __cpp_lib_ssize
+namespace std {
+
+
+template <class C>
+constexpr auto ssize(const C& c)
+    -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
+  using R = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
+  return static_cast<R>(c.size());
+}
+
 
 } // namespace std
 #endif
 
+
 #ifdef __cpp_lib_constexpr_algorithms
-#include <algorithm>
+
+
+#  include <algorithm>
 namespace knapply {
 constexpr auto BUILTIN_CONSTEXPR_ALGOS = true;
 }
+
+
 #else
 namespace knapply {
 constexpr auto BUILTIN_CONSTEXPR_ALGOS = false;
 }
+
+
 namespace std {
 template <class InputIt, class T>
-constexpr InputIt find(InputIt first, InputIt last, const T &value) {
+constexpr InputIt find(InputIt first, InputIt last, const T& value) {
   for (; first != last; ++first) {
     if (*first == value) {
       return first;
@@ -45,6 +72,7 @@ constexpr InputIt find_if(InputIt first, InputIt last, UnaryPredicate p) {
   return last;
 }
 
+
 template <class InputIt, class UnaryPredicate>
 constexpr InputIt find_if_not(InputIt first, InputIt last, UnaryPredicate q) {
   for (; first != last; ++first) {
@@ -55,9 +83,10 @@ constexpr InputIt find_if_not(InputIt first, InputIt last, UnaryPredicate q) {
   return last;
 }
 
+
 template <class InputIt, class ForwardIt>
-constexpr InputIt find_first_of(InputIt first, InputIt last, ForwardIt s_first,
-                                ForwardIt s_last) {
+constexpr InputIt
+find_first_of(InputIt first, InputIt last, ForwardIt s_first, ForwardIt s_last) {
   for (; first != last; ++first) {
     for (ForwardIt it = s_first; it != s_last; ++it) {
       if (*first == *it) {
@@ -67,6 +96,7 @@ constexpr InputIt find_first_of(InputIt first, InputIt last, ForwardIt s_first,
   }
   return last;
 }
+
 
 template <class InputIt, class UnaryPredicate>
 constexpr bool all_of(InputIt first, InputIt last, UnaryPredicate p) {
@@ -85,7 +115,7 @@ constexpr bool none_of(InputIt first, InputIt last, UnaryPredicate p) {
 
 template <class InputIt, class T>
 constexpr typename iterator_traits<InputIt>::difference_type
-count(InputIt first, InputIt last, const T &value) {
+count(InputIt first, InputIt last, const T& value) {
   typename iterator_traits<InputIt>::difference_type ret = 0;
   for (; first != last; ++first) {
     if (*first == value) {
