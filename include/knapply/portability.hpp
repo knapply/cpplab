@@ -5,12 +5,12 @@
 namespace knapply::portability {
 
 
-#if __cplusplus == 202002L
-#  define KNAPPLY_CPP_IS_20 1
-constexpr auto cpp = 20;
-#elif __cplus_plus == 201703L
-#  define KNAPPLY_CPP_IS_17 1
-constexpr auto cpp  = 17;
+#if __cplusplus >= 202002L
+#  define KNAPPLY_CPP_IS_AT_LEAST_20 1
+constexpr auto cpp_minimum_standad = 20;
+#elif __cplusplus >= 201703L
+#  define KNAPPLY_CPP_IS_AT_LEAST_17 1
+constexpr auto cpp_minimum_standad = 17;
 #endif
 
 
@@ -43,77 +43,63 @@ constexpr auto arch = archs::x86_32;
 #    define KNAPPLY_ARCH_IS_ARM_32BITS 1
 constexpr auto arch = archs::arm32;
 #  endif
-#endif
+#endif // defined(__x86_64__) || defined(_M_AMD64)
 
 
 #ifdef __GNUC__
 #  define KNAPPLY_COMPILER_IS_GCC 1
-
-#  if defined(__clang__) /* clangd intellisense workaround */
-#    undef __clang__
-#  endif
-
 constexpr auto compiler = compilers::gcc;
-
-
 namespace gcc {
 constexpr auto major = __GNUC__;
 constexpr auto minor = __GNUC_MINOR__;
 } // namespace gcc
-#endif
-
-
-#ifdef __clang__
+#elif define(__clang__)
 #  define KNAPPLY_COMPILER_IS_CLANG 1
 constexpr auto compiler = compilers::clang;
-
 namespace clang {
 constexpr auto compiler_version    = __clang__;
 constexpr auto compiler_minor      = __clang_minor__;
 constexpr auto compiler_patchlevel = __clang_patchlevel__;
 } // namespace clang
-#endif
-
-
-#ifdef _MSC_VER
+#elif defined(_MSC_VER)
 #  define KNAPPLY_COMPILER_IS_VISUAL_STUDIO 1
-
 constexpr auto compiler = compilers::visual_studio;
-
 namespace visual_studio {
 constexpr auto version      = _MSC_VER;
 constexpr auto full_version = _MSC_FULL_VER;
 } // namespace visual_studio
-#endif
-
-
-#ifdef KNAPPLY_COMPILER_IS_VISUAL_STUDIO
-
-#  define really_inline __forceinline
-
-#  ifndef likely
-#    define likely(x) x
-#  endif
-#  ifndef unlikely
-#    define unlikely(x) x
-#  endif
-
-
-#else
-
-#  define really_inline inline __attribute__((always_inline))
-
-#  ifndef likely
-#    define likely(x) __builtin_expect(!!(x), 1)
-#  endif
-#  ifndef unlikely
-#    define unlikely(x) __builtin_expect(!!(x), 0)
-#  endif
-
-
-#endif
+#endif // __GNUC__
 
 
 } // namespace knapply::portability
+
+
+namespace knapply {
+
+
+#ifdef KNAPPLY_COMPILER_IS_VISUAL_STUDIO
+#  define knapply_really_inline __forceinline
+#  define knapply_likely(x) x
+#  define knapply_unlikely(x) x
+
+#else
+#  define knapply_really_inline inline __attribute__((always_inline))
+#  define knapply_likely(x) __builtin_expect(!!(x), 1)
+#  define knapply_unlikely(x) __builtin_expect(!!(x), 0)
+
+template <typename T>
+knapply_really_inline constexpr auto is_likely(T x) {
+  return knapply_likely(x);
+}
+
+template <typename T>
+knapply_really_inline constexpr auto is_unlikely(T x) {
+  return knapply_likely(x);
+}
+#endif // KNAPPLY_COMPILER_IS_VISUAL_STUDIO
+
+
+} // namespace knapply
+
 
 #endif
