@@ -2,6 +2,7 @@ on: push
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
+  DENABLE_TEST_COVERAGE: 1
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 name: GCC
