@@ -3,7 +3,6 @@ Language: Cpp
 Standard: Cpp11
 BasedOnStyle: LLVM
 
-
 AlignConsecutiveDeclarations: true
 AlignConsecutiveAssignments: true
 AlignTrailingComments: true

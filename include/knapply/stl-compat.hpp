@@ -1,14 +1,11 @@
 #ifndef __KNAPPLY__STL_COMPAT_HPP__
 #define __KNAPPLY__STL_COMPAT_HPP__
 
-
 #include <iterator>
 #include <type_traits>
 
-
 #ifndef __cpp_lib_remove_cvref
 namespace std {
-
 
 template <class T>
 struct remove_cvref {
@@ -17,20 +14,43 @@ struct remove_cvref {
 template <class T>
 using remove_cvref_t = typename remove_cvref<T>::type;
 
+} // namespace std
+
+
+#endif
+
+
+#ifndef __cpp_lib_ssize
+namespace std {
+
+
+template <class C>
+constexpr auto ssize(const C& c)
+    -> std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>> {
+  using R = std::common_type_t<std::ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
+  return static_cast<R>(c.size());
+}
+
 
 } // namespace std
 #endif
 
 
 #ifdef __cpp_lib_constexpr_algorithms
+
+
 #  include <algorithm>
 namespace knapply {
 constexpr auto BUILTIN_CONSTEXPR_ALGOS = true;
 }
+
+
 #else
 namespace knapply {
 constexpr auto BUILTIN_CONSTEXPR_ALGOS = false;
 }
+
+
 namespace std {
 template <class InputIt, class T>
 constexpr InputIt find(InputIt first, InputIt last, const T& value) {
@@ -41,7 +61,6 @@ constexpr InputIt find(InputIt first, InputIt last, const T& value) {
   }
   return last;
 }
-
 
 template <class InputIt, class UnaryPredicate>
 constexpr InputIt find_if(InputIt first, InputIt last, UnaryPredicate p) {
@@ -84,18 +103,15 @@ constexpr bool all_of(InputIt first, InputIt last, UnaryPredicate p) {
   return std::find_if_not(first, last, p) == last;
 }
 
-
 template <class InputIt, class UnaryPredicate>
 constexpr bool any_of(InputIt first, InputIt last, UnaryPredicate p) {
   return std::find_if(first, last, p) != last;
 }
 
-
 template <class InputIt, class UnaryPredicate>
 constexpr bool none_of(InputIt first, InputIt last, UnaryPredicate p) {
   return std::find_if(first, last, p) == last;
 }
-
 
 template <class InputIt, class T>
 constexpr typename iterator_traits<InputIt>::difference_type
@@ -109,11 +125,8 @@ count(InputIt first, InputIt last, const T& value) {
   return ret;
 }
 
-
 } // namespace std
 
-
 #endif
-
 
 #endif

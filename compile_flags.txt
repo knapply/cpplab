@@ -6,3 +6,9 @@
 -Weffc++
 -Wstrict-aliasing
 -Werror
+-Wlifetime
+-pedantic
+-Weverything
+-Wno-c++98-compat
+-Wno-c++98-c++11-c++14-compat
+-Wno-reserved-id-macro

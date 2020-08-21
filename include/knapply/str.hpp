@@ -141,11 +141,13 @@ constexpr std::string_view sub(const std::string_view s,
              ? std::string_view{std::cbegin(s) + pos, std::min(n, std::size(s) - pos)}
              : "";
 }
+namespace test {
 static_assert(sub("", 1) == "");
 static_assert(sub("a", 1) == "");
 static_assert(sub("abc", 0, 4) == "abc");
 static_assert(sub("abc", 1) == "bc");
 static_assert(sub("abc", 1, 1) == "b");
+} // namespace test
 
 
 constexpr std::string_view trim_left(const std::string_view s) noexcept {
@@ -157,10 +159,12 @@ constexpr std::string_view trim_left(const std::string_view s) noexcept {
   }
   return i != std::size(s) ? s : "";
 }
+namespace test {
 static_assert(trim_left("  123  ") == "123  ");
 static_assert(trim_left("     ") == "");
 static_assert(trim_left(" ") == "");
 static_assert(trim_left("") == "");
+} // namespace test
 
 
 constexpr std::string_view trim_right(const std::string_view s) noexcept {
@@ -175,19 +179,23 @@ constexpr std::string_view trim_right(const std::string_view s) noexcept {
   }
   return i != 0 ? s : "";
 }
+namespace test {
 static_assert(trim_right("  123  ") == "  123");
 static_assert(trim_right("     ") == "");
 static_assert(trim_right(" ") == "");
 static_assert(trim_right("") == "");
+} // namespace test
 
 
 constexpr std::string_view trim(const std::string_view s) noexcept {
   return trim_right(trim_left(s));
 }
+namespace test {
 static_assert(trim("  123  ") == "123");
 static_assert(trim("     ") == "");
 static_assert(trim(" ") == "");
 static_assert(trim("") == "");
+} // namespace test
 
 
 template <typename int_T = int>
@@ -214,6 +222,7 @@ constexpr int_T toi(const std::string_view s) noexcept {
 
   return out;
 }
+namespace test {
 static_assert(toi("4F") == 79);
 static_assert(toi("66") == 102);
 static_assert(toi("f1") == 241);
@@ -224,6 +233,7 @@ static_assert(toi("~~~") == std::numeric_limits<int>::min());
 static_assert(toi("") == std::numeric_limits<int>::min());
 static_assert(toi(" 4F") == std::numeric_limits<int>::min());
 static_assert(toi(" (9 ") == std::numeric_limits<int>::min());
+} // namespace test
 
 
 template <typename needle_T>
@@ -242,12 +252,14 @@ constexpr std::size_t count(const std::string_view s, const needle_T needle) noe
   }
   return out;
 }
+namespace test {
 static_assert(count("", ',') == 0);
 static_assert(count(" , , ", ',') == 2);
 static_assert(count(std::string_view(" 11 , 11 "), '1') == 4);
 static_assert(count(" 11 , 11 ", "1"sv) == 4);
 static_assert(count(" 11 , 11 ", "11"sv) == 2);
 static_assert(count("11 , 11 ", " , 11"sv) == 1);
+} // namespace test
 
 
 template <typename delim_T>
@@ -266,11 +278,6 @@ std::vector<std::string_view> split(const std::string_view s,
 template <std::size_t n, typename needle_T>
 constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
                                                       const needle_T delim) noexcept {
-  std::size_t offset = 1;
-  if constexpr (std::is_same_v<std::remove_all_extents_t<needle_T>, std::string_view>) {
-    offset = std::size(delim);
-  }
-
   std::array<std::string_view, n> out;
 
   auto        it   = std::begin(out);
@@ -279,15 +286,16 @@ constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
   if constexpr (BUILTIN_CONSTEXPR_ALGOS || is_sameish_v<needle_T, std::string_view>) {
     for (auto right = s.find(delim); right < std::size(s) && it != std::cend(out);) {
       *it++ = std::string_view(std::cbegin(s) + left, right - left);
-      left  = right + offset;
+      left  = right + std::size(delim);
       right = s.find(delim, left);
     }
   } else {
     for (auto right = std::find(std::cbegin(s), std::cend(s), delim);
          right != std::cend(s) && it != std::cend(out);) {
-      *it++ = std::string_view(std::cbegin(s) + left,
-                               std::distance(std::cbegin(s), right) - left);
-      left  = std::distance(std::cbegin(s), right) + offset;
+      *it++ = std::string_view(
+          std::cbegin(s) + left,
+          static_cast<std::size_t>(std::distance(std::cbegin(s), right)) - left);
+      left  = static_cast<std::size_t>(std::distance(std::cbegin(s), right)) + 1;
       right = std::find(std::cbegin(s) + left, std::cend(s), delim);
     }
   }
@@ -298,6 +306,7 @@ constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
 
   return out;
 }
+namespace test {
 constexpr auto csv             = ",aA,bB,c,d , e ,, ,1";
 constexpr auto str_split_fixed = split_fixed<9>(csv, ',');
 static_assert(str_split_fixed[0] == "");
@@ -325,6 +334,7 @@ static_assert(split_fixed<2>(csv, " , "sv)[1] == "e ,, ,1");
 
 constexpr auto str_split_arabic = "أَلْحُرُوف   ٱلْعَرَبِيَّة";
 static_assert(split_fixed<2>(str_split_arabic, "   "sv)[1] == "ٱلْعَرَبِيَّة");
+} // namespace test
 
 
 } // namespace knapply::str
