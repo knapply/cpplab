@@ -2,7 +2,8 @@ on: push
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
-  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  # DENABLE_TEST_COVERAGE: 1
+  # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 name: GCC
 
@@ -45,4 +46,5 @@ jobs:
           ctest --output-on-failure
           
       - name: Collect Code Coverage
+        # if: matrix.config.os == 'ubuntu-18.04' && matrix.config.compiler == 'g++-9'
         run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"
