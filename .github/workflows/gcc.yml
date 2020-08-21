@@ -46,5 +46,5 @@ jobs:
           ctest --output-on-failure
           
       - name: Collect Code Coverage
-        if: matrix.config.compiler == 'g++-9'
+        if: matrix.config.os == 'ubuntu-18.04' && matrix.config.compiler == 'g++-9'
         run: bash <(curl -s https://codecov.io/bash) -x gcov-9 || echo "Codecov did not collect coverage reports"
