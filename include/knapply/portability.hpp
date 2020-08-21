@@ -53,7 +53,6 @@ namespace gcc {
 constexpr auto major = __GNUC__;
 constexpr auto minor = __GNUC_MINOR__;
 } // namespace gcc
-
 #elif define(__clang__)
 #  define KNAPPLY_COMPILER_IS_CLANG 1
 constexpr auto compiler = compilers::clang;
@@ -62,7 +61,6 @@ constexpr auto compiler_version    = __clang__;
 constexpr auto compiler_minor      = __clang_minor__;
 constexpr auto compiler_patchlevel = __clang_patchlevel__;
 } // namespace clang
-
 #elif defined(_MSC_VER)
 #  define KNAPPLY_COMPILER_IS_VISUAL_STUDIO 1
 constexpr auto compiler = compilers::visual_studio;

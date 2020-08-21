@@ -69,6 +69,7 @@ TEST_CASE("txt::sub") {
   CHECK_NOTHROW(static_assert(sub("abc", 1, 1) == "b"));
 }
 
+
 TEST_CASE("txt::trim_left / txt::trim_right / txt::trim") {
   CHECK_NOTHROW(static_assert(trim_left("  123  ") == "123  "));
   CHECK_NOTHROW(static_assert(trim_left("     ") == ""));
@@ -86,6 +87,7 @@ TEST_CASE("txt::trim_left / txt::trim_right / txt::trim") {
   CHECK_NOTHROW(static_assert(trim("") == ""));
 }
 
+
 TEST_CASE("txt::toi") {
   CHECK_NOTHROW(static_assert(toi("4F") == 79));
   CHECK_NOTHROW(static_assert(toi("66") == 102));
@@ -99,6 +101,7 @@ TEST_CASE("txt::toi") {
   CHECK_NOTHROW(static_assert(toi(" (9 ") == std::numeric_limits<int>::min()));
 }
 
+
 TEST_CASE("txt::count") {
   CHECK_NOTHROW(static_assert(count("", ',') == 0));
   CHECK_NOTHROW(static_assert(count(" , , ", ',') == 2));
@@ -107,6 +110,7 @@ TEST_CASE("txt::count") {
   CHECK_NOTHROW(static_assert(count(" 11 , 11 "sv, "11"sv) == 2));
   CHECK_NOTHROW(static_assert(count("11 , 11 "sv, " , 11"sv) == 1));
 }
+
 
 TEST_CASE("txt::split") {
   constexpr auto csv = ",aA,bB,c,d , e ,, ,1";
@@ -124,8 +128,8 @@ TEST_CASE("txt::split") {
   CHECK_EQ(str_split[8], "1");
 }
 
-TEST_CASE("txt::split_fixed") {
 
+TEST_CASE("txt::split_fixed") {
   constexpr auto csv = ",aA,bB,c,d , e ,, ,1";
 
   constexpr auto str_split_fixed = split_fixed<9>(csv, ',');

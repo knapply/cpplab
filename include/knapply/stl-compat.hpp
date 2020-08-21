@@ -37,14 +37,10 @@ constexpr auto ssize(const C& c)
 
 
 #if defined(__cpp_lib_constexpr_algorithms) && __cpp_lib_constexpr_algorithms >= 201806L
-
-
 #  include <algorithm>
 namespace knapply {
 constexpr auto BUILTIN_CONSTEXPR_ALGOS = true;
 }
-
-
 #else
 namespace knapply::portability {
 constexpr auto has_builtin_constexpr_algos = false;
