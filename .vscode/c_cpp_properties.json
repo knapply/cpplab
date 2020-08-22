@@ -1,9 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"            ]
+            "name": "Linux"
         }
     ],
     "version": 4

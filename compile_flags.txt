@@ -1,13 +1,14 @@
 -std=c++17
 -O3
 -I/home/brendan/cpplab/include/
+-I/home/brendan/cpplab/benchmark/
 -Wall
 -Wextra
 -Weffc++
 -Wstrict-aliasing
 -Werror
 -Wlifetime
--pedantic
+-Wpedantic
 -Weverything
 -Wno-c++98-compat
 -Wno-c++98-compat-pedantic

@@ -124,7 +124,7 @@ static_assert(std::none_of(std::cbegin(whitespace), std::cend(whitespace), is_pu
 
 
 constexpr bool is_space(const char c) noexcept {
-  return ((c >= 9 && c <= 13) || c == 32);
+  return (c >= 9 && c <= 13) || c == 32;
 }
 static_assert(std::all_of(std::cbegin(whitespace), std::cend(whitespace), is_space));
 static_assert(std::none_of(std::cbegin(alpha_numeric),
@@ -289,26 +289,29 @@ std::vector<std::string_view> split(const std::string_view s,
 }
 
 
-template <std::size_t n, typename needle_T>
+template <std::size_t n, typename delim_T>
 constexpr std::array<std::string_view, n> split_fixed(const std::string_view s,
-                                                      const needle_T delim) noexcept {
+                                                      const delim_T delim) noexcept {
   std::array<std::string_view, n> out;
 
   auto        it   = std::begin(out);
   std::size_t left = 0;
 
-  if constexpr (is_same_ish_v<needle_T, std::string_view>) {
+  if constexpr (is_same_ish_v<delim_T, std::string_view>) {
+    const auto offset = std::size(delim);
     for (auto right = s.find(delim); right < std::size(s) && it != std::cend(out);) {
       *it++ = std::string_view(std::cbegin(s) + left, right - left);
-      left  = right + std::size(delim);
+
+      left  = right + offset;
       right = s.find(delim, left);
     }
-  } else {
+  } else { /* !is_same_ish_v<delim_T, std::string_view> */
     for (auto right = std::find(std::cbegin(s), std::cend(s), delim);
          right != std::cend(s) && it != std::cend(out);) {
       *it++ = std::string_view(
           std::cbegin(s) + left,
           static_cast<std::size_t>(std::distance(std::cbegin(s), right)) - left);
+
       left  = static_cast<std::size_t>(std::distance(std::cbegin(s), right)) + 1;
       right = std::find(std::cbegin(s) + left, std::cend(s), delim);
     }
@@ -346,6 +349,7 @@ static_assert(test_vals::fixed2[7] == " ");
 static_assert(split_fixed<2>(test_vals::csv, " , "sv)[0] == ",aA,bB,c,d");
 static_assert(split_fixed<2>(test_vals::csv, " , "sv)[1] == "e ,, ,1");
 static_assert(split_fixed<2>(test_vals::arabic, "   "sv)[1] == "ٱلْعَرَبِيَّة");
+static_assert(split_fixed<2>("ٱلْة"sv, "لْ"sv)[1] == "ة");
 
 
 } // namespace knapply::txt

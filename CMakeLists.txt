@@ -52,6 +52,20 @@ CPMAddPackage(
 )
 
 
+
+if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bench/benchmark)
+execute_process (
+  COMMAND bash -c "
+  cd ${CMAKE_CURRENT_SOURCE_DIR}/bench
+  git clone https://github.com/google/benchmark.git
+  git clone https://github.com/google/googletest.git benchmark/googletest
+  cd ${CMAKE_CURRENT_SOURCE_DIR}/bench/benchmark
+  cmake -E make_directory \"build\"
+  cmake -E chdir \"build\" cmake -DCMAKE_BUILD_TYPE=Release ../
+  cmake --build \"build\" --config Release
+  cd ${CMAKE_CURRENT_SOURCE_DIR}"
+)
+endif()
 # ---- Add source files ----
 
 FILE(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
@@ -139,10 +153,10 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 # ---- Create binary ----
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test/source/*.cpp)
-add_executable(cpplabTests ${sources})
-target_link_libraries(cpplabTests doctest cpplab)
+add_executable(${PROJECT_NAME}-test ${sources})
+target_link_libraries(${PROJECT_NAME}-test doctest cpplab)
 
-set_target_properties(cpplabTests PROPERTIES CXX_STANDARD 17)
+set_target_properties(${PROJECT_NAME}-test PROPERTIES CXX_STANDARD 17)
 
 # enable compiler warnings
 if (NOT TEST_INSTALLED_VERSION)
@@ -162,7 +176,7 @@ endif()
 # ADD_TEST(cpplabTests cpplabTests)
 
 include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
-doctest_discover_tests(cpplabTests)
+doctest_discover_tests(${PROJECT_NAME}-test)
 
 # # ---- code coverage ----
 
@@ -170,3 +184,12 @@ doctest_discover_tests(cpplabTests)
 #   target_compile_options(cpplab INTERFACE -O0 -g -std=gnu++17 -fprofile-arcs -ftest-coverage)
 #   target_link_options(cpplab INTERFACE -fprofile-arcs -ftest-coverage)
 # endif()
+
+
+# set(benchmark_src benchmark/cpplab-bench.cpp)
+
+# add_executable(benchmark ${benchmark_src})
+
+# # add_subdirectory(benchmark)
+# add_subdirectory(benchmark/benchmark)
+# target_link_libraries(benchmark PUBLIC include)

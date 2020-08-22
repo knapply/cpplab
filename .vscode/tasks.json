@@ -5,6 +5,11 @@
             "label": "test",
             "type": "shell",
             "command": "cmake -Htest -Bbuild/test && cmake --build build/test && CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test"
+        },
+        {
+            "label": "bench",
+            "type": "shell",
+            "command": "cmake -Hbenchmark -Bbuild/benchmark && build/benchmark/cpplab-bench"
         }
     ]
 }

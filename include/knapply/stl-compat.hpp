@@ -1,6 +1,7 @@
 #ifndef __KNAPPLY__STL_COMPAT_HPP__
 #define __KNAPPLY__STL_COMPAT_HPP__
 
+
 #include <iterator>
 #include <type_traits>
 
@@ -36,8 +37,9 @@ constexpr auto ssize(const C& c)
 #endif
 
 
-#if defined(__cpp_lib_constexpr_algorithms) && __cpp_lib_constexpr_algorithms >= 201806L
+#ifdef __cpp_lib_constexpr_algorithms
 #  include <algorithm>
+#  include <execution>
 namespace knapply {
 constexpr auto BUILTIN_CONSTEXPR_ALGOS = true;
 }
