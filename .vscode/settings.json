@@ -64,12 +64,17 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "editor.rulers": [
-        90
+        80
     ],
-    // "clangd.arguments": [
-    //     "-log=verbose",
-    //     "-pretty",
-    //     "--background-index",
-    //     "--all-scopes-completion"
-    // ],
+    // "C_Cpp.formatting": "clangFormat",
+    // "C_Cpp.clang_format_path": "${workspaceFolder}/.clang-format",
+    "C_Cpp.enhancedColorization": "Enabled",
+    // "C_Cpp.clang_format_sortIncludes": false,
+    // "C_Cpp.clang_format_path": "/usr/bin/clang-format-10",
+    // "C_Cpp.experimentalFeatures": "Enabled",
+    "C_Cpp.loggingLevel": "Debug",
+    // "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    "editor.fontFamily": "'Fira Code', 'monospace', monospace, 'Droid Sans Fallback'",
+    "editor.fontLigatures": true
+    // "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
 }

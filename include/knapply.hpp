@@ -8,11 +8,11 @@
 #  error This is not a C++>=17 compiler.
 #endif
 
+#include "knapply/stl-compat.hpp"
 
 #include "knapply/portability.hpp"
-#include "knapply/stl-compat.hpp"
 #include "knapply/common.hpp"
-
+#include "knapply/algorithms.hpp"
 #include "knapply/txt.hpp"
 
 

@@ -1,7 +1,15 @@
 {
     "configurations": [
         {
-            "name": "Linux"
+            "name": "Linux",
+            "compilerArgs": [
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-Wpedantic",
+                "-pedantic",
+                "-Weverything"
+            ]
         }
     ],
     "version": 4

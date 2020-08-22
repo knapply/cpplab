@@ -3,20 +3,20 @@ Language: Cpp
 Standard: Cpp11
 BasedOnStyle: LLVM
 
-AlignConsecutiveDeclarations: true
+# AlignConsecutiveDeclarations: true
 AlignConsecutiveAssignments: true
-AlignTrailingComments: true
+# AlignTrailingComments: true
 
 AllowShortFunctionsOnASingleLine: Inline
 
-AlwaysBreakTemplateDeclarations: true
+AlwaysBreakTemplateDeclarations: false
 
 BinPackArguments: false
 BinPackParameters: false
 
 BreakBeforeTernaryOperators: true
 
-ColumnLimit: 90
+ColumnLimit: 80
 
 DerivePointerAlignment: false
 
@@ -24,7 +24,7 @@ IndentCaseLabels: true
 IndentPPDirectives: AfterHash
 IndentWidth: 2
 
-MaxEmptyLinesToKeep: 2
+MaxEmptyLinesToKeep: 3
 
 PointerAlignment: Left
 
